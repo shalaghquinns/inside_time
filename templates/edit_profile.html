@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="minimal-overlay">
+
+    <a href="{{ url_for('profile', user_id=user.id) }}" class="nav-btn cancel-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" stroke="black" stroke-width="0.8" fill="none">
+            <line x1="1" y1="1" x2="13" y2="13" />
+            <line x1="13" y1="1" x2="1" y2="13" />
+        </svg>
+    </a>
+
+    <div class="form-card">
+        
+        <div class="star-header">
+            <span style="font-family: 'EB Garamond'; font-style: italic; font-size: 24px;">edit soul</span>
+        </div>
+
+        <form action="{{ url_for('edit_profile', user_id=user.id) }}" method="POST" autocomplete="off" style="width: 100%;">
+            
+            <div class="fields-grid">
+                
+                <label for="name">name</label>
+                <input type="text" id="name" name="name" value="{{ user.name }}" required>
+
+                <label for="birthday">birthday</label>
+                <input type="text" id="birthday" name="birth_date" value="{{ user.birth_date }}" required 
+                       onfocus="(this.type='date')" 
+                       onblur="(this.value ? this.type='date' : this.type='text')">
+
+                <label for="time">time</label>
+                <input type="text" id="time" name="birth_time" value="{{ user.birth_time }}" required 
+                       onfocus="(this.type='time')" 
+                       onblur="(this.value ? this.type='time' : this.type='text')">
+
+                <label for="location">location</label>
+                <div class="location-wrapper">
+                    <input type="text" id="location" name="city" value="{{ user.city }}" required placeholder="Type a city...">
+                    <ul id="suggestions-list" class="suggestions-dropdown"></ul>
+                </div>
+
+            </div>
+
+            <div class="submit-wrapper">
+                <button type="submit">update</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<style>
+    /* הגדרות בסיס */
+    header, footer { display: none !important; }
+    body, html { background-color: #FFFFFF !important; font-family: 'EB Garamond', serif !important; height: 100%; margin: 0; overflow: hidden; }
+
+    .minimal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #FFFFFF; z-index: 10; display: flex; align-items: center; justify-content: center; }
+    
+    .cancel-btn { position: absolute; top: 20px; left: 60px; background: transparent; border: none; cursor: pointer; padding: 15px; display: flex; align-items: center; }
+
+    .form-card { border: 1.5px solid #000000; width: 400px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+    
+    .star-header { margin-bottom: 30px; width: 100%; display: flex; justify-content: center; opacity: 0.6; }
+
+    .fields-grid { display: grid; grid-template-columns: 80px 1fr; gap: 30px 15px; width: 100%; margin-bottom: 50px; align-items: end; }
+    .fields-grid label { font-size: 18px; color: #000; padding-bottom: 5px; }
+    .fields-grid input { width: 100%; border: none; background: transparent; outline: none; border-bottom: 1px solid #cccccc; font-family: 'EB Garamond', serif; font-size: 18px; font-weight: bold; color: #000; text-align: right; padding-bottom: 5px; }
+    .fields-grid input:focus { border-bottom: 1px solid #000; }
+
+    .submit-wrapper { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+    .submit-wrapper button { background: none; border: none; font-family: 'EB Garamond', serif; font-size: 18px; color: #000; cursor: pointer; padding: 10px 30px; font-style: italic; }
+    .submit-wrapper button:hover { opacity: 0.6; }
+
+    /* עיצוב רשימת ההצעות */
+    .location-wrapper { position: relative; width: 100%; }
+    .suggestions-dropdown {
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: #fff; border: 1px solid #000;
+        list-style: none; padding: 0; margin: 5px 0 0 0;
+        z-index: 1000; max-height: 200px; overflow-y: auto;
+        display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .suggestions-dropdown li { padding: 10px; cursor: pointer; font-family: 'EB Garamond', serif; font-size: 16px; border-bottom: 1px solid #eee; text-align: left; }
+    .suggestions-dropdown li:hover { background-color: #f5f5f5; }
+    .suggestions-dropdown li .country-name { font-size: 12px; color: #888; margin-left: 5px; }
+</style>
+
+<script>
+    const cityInput = document.getElementById('location');
+    const suggestionsList = document.getElementById('suggestions-list');
+
+    cityInput.addEventListener('input', function() {
+        const query = this.value;
+        if (query.length < 3) { suggestionsList.style.display = 'none'; return; }
+
+        fetch(`https://photon.komoot.io/api/?q=${query}&limit=5&lang=en`)
+            .then(response => response.json())
+            .then(data => {
+                suggestionsList.innerHTML = ''; 
+                if (data.features && data.features.length > 0) {
+                    suggestionsList.style.display = 'block';
+                    data.features.forEach(feature => {
+                        const props = feature.properties;
+                        let city = props.name;
+                        let country = props.country || '';
+                        let state = props.state || '';
+                        
+                        const li = document.createElement('li');
+                        li.innerHTML = `${city} <span class="country-name">${state ? state + ', ' : ''}${country}</span>`;
+                        
+                        li.addEventListener('click', function() {
+                            cityInput.value = city + ', ' + country; 
+                            suggestionsList.style.display = 'none'; 
+                        });
+                        suggestionsList.appendChild(li);
+                    });
+                } else { suggestionsList.style.display = 'none'; }
+            })
+            .catch(err => console.error('Error fetching cities:', err));
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target !== cityInput && e.target !== suggestionsList) {
+            suggestionsList.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

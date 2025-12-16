@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="{{ url_for('index') }}" class="nav-btn top-left-shifted">
+    <svg width="14" height="14" viewBox="0 0 14 14" stroke="black" stroke-width="0.8" fill="none">
+        <line x1="1" y1="1" x2="13" y2="13" />
+        <line x1="13" y1="1" x2="1" y2="13" />
+    </svg>
+</a>
+
+<div class="db-container">
+    <h1 class="page-title">souls database</h1>
+
+    {% if users %}
+    <div class="users-list">
+        {% for user in users %}
+        <a href="{{ url_for('profile', user_id=user.id) }}" class="user-row">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-meta">{{ user.birth_date }}</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No souls charted yet.</p>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('add_profile') }}" class="floating-plus-btn">
+        <img src="{{ url_for('static', filename='images/plus.png') }}" alt="Add">
+    </a>
+
+</div>
+
+<style>
+    header, footer { display: none !important; }
+    body, html { background-color: #FFFFFF !important; font-family: 'EB Garamond', serif !important; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
+
+    .nav-btn.top-left-shifted { position: fixed; top: 30px; left: 30px; padding: 10px; cursor: pointer; opacity: 0.6; z-index: 100; display: flex; }
+
+    .db-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 80px 20px;
+        text-align: center;
+        min-height: 100vh;
+        position: relative; /* כדי שהכפתור הצף יתמקם יחסית אליו אם נרצה */
+    }
+
+    .page-title { font-weight: 400; font-size: 32px; margin-bottom: 40px; letter-spacing: 1px; }
+
+    /* רשימת המשתמשים */
+    .users-list { display: flex; flex-direction: column; gap: 15px; padding-bottom: 100px; /* מקום לכפתור הפלוס */ }
+
+    .user-row {
+        display: flex; justify-content: space-between; align-items: center;
+        text-decoration: none; color: #000;
+        border-bottom: 1px solid #eee; padding: 20px 10px;
+        transition: 0.2s;
+    }
+    .user-row:hover { background-color: #fafafa; padding-left: 15px; padding-right: 15px; border-bottom-color: #000; }
+
+    .user-name { font-size: 20px; font-weight: 500; }
+    .user-meta { font-size: 14px; opacity: 0.5; font-style: italic; }
+
+    .empty-state { opacity: 0.5; font-style: italic; margin-top: 50px; }
+
+    /* כפתור הפלוס הצף */
+    .floating-plus-btn {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%); /* ממורכז למטה */
+        z-index: 100;
+        transition: transform 0.3s ease;
+    }
+    .floating-plus-btn img {
+        width: 30px; /* גודל הפלוס */
+        height: auto;
+    }
+    .floating-plus-btn:hover img {
+        transform: rotate(90deg); /* אנימציית הסיבוב שלך */
+    }
+
+</style>
+
+{% endblock %}

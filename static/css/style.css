@@ -1,0 +1,144 @@
+/* --- Global Reset & Fonts --- */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #0f0c29, #302b63, #24243e);
+    color: #e0e0e0;
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    font-family: 'Cinzel', serif;
+    color: #f8c291;
+    text-shadow: 0px 0px 10px rgba(248, 194, 145, 0.3);
+}
+
+/* --- Header --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(15, 12, 41, 0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: #f8c291;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #0f0c29;
+    transition: 0.3s;
+    z-index: 200;
+    padding-top: 20px;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+}
+
+.sidebar.active { left: 0; }
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    margin-bottom: 30px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.nav-link {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #e0e0e0;
+    display: block;
+    transition: 0.2s;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f8c291;
+}
+
+/* --- Overlay --- */
+#overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 150;
+    display: none;
+}
+#overlay.active { display: block; }
+
+/* --- Container & Cards --- */
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+    backdrop-filter: blur(5px);
+}
+
+.profile-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.profile-link {
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+}
+
+/* --- Floating Add Button --- */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(45deg, #d53369, #daae51);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(213, 51, 105, 0.5);
+    transition: transform 0.2s;
+}
+
+.fab:hover { transform: scale(1.1); }

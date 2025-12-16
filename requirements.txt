@@ -1,0 +1,8 @@
+Flask
+pandas
+flatlib
+pyswisseph
+geopy
+timezonefinder
+pytz
+numpy

@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="degree-page-wrapper">
+
+    <a href="{{ back_link }}" class="nav-btn top-right-dash">
+        <img src="{{ url_for('static', filename='images/dash.png') }}" alt="Back">
+    </a>
+
+    {% if zodiac_symbol_url %}
+    <div class="top-center-symbol">
+        <img src="{{ zodiac_symbol_url }}" alt="{{ sign }}">
+    </div>
+    {% endif %}
+
+    <a href="{{ prev_link }}" class="nav-arrow left-arrow" title="Previous">❮</a>
+    <a href="{{ next_link }}" class="nav-arrow right-arrow" title="Next">❯</a>
+
+
+    <div class="art-container">
+        
+        <div class="visual-composition">
+            <img src="{{ image_url }}" alt="{{ sign }} {{ degree }}" class="main-sketch">
+        </div>
+
+        {% if content and content.sentence %}
+        <div class="poetic-sentence">
+            {{ content.sentence }}
+        </div>
+        {% endif %}
+
+        <div class="spacer"></div>
+
+        {% if content %}
+        <div class="extended-content">
+            {% if content.header %}
+            <h3 class="content-header">{{ content.header }}</h3>
+            {% endif %}
+            
+            {% if content.body %}
+            <div class="content-body">
+                {{ content.body | safe }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+    /* --- הגדרות בסיס --- */
+    body, html {
+        background-color: #FFFFFF !important;
+        color: #000000;
+        font-family: 'Times New Roman', Times, serif;
+        margin: 0; padding: 0;
+    }
+    
+    header, footer { display: none !important; }
+
+    .degree-page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 60px;
+        position: relative;
+    }
+
+    /* --- Header Elements --- */
+
+    /* כפתור ה-Dash - גדול הרבה יותר */
+    .nav-btn.top-right-dash {
+        position: fixed; /* קבוע במסך */
+        top: 30px;
+        right: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 100;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+    .nav-btn.top-right-dash:hover { opacity: 1; }
+    
+    /* הגדלת התמונה של ה-Dash */
+    .nav-btn.top-right-dash img { 
+        width: 40px; /* היה 15px, עכשיו הרבה יותר גדול */
+        height: auto; 
+    }
+
+    /* סמל המזל במרכז */
+    .top-center-symbol {
+        position: fixed;
+        top: 30px; /* באותו גובה של ה-Dash */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 90;
+        opacity: 0.8;
+    }
+    
+    .top-center-symbol img {
+        height: 40px; /* גובה הסמל */
+        width: auto;
+    }
+
+    /* --- Navigation --- */
+    .nav-arrow {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 3rem; /* חיצים גדולים ונוחים */
+        color: #000000;
+        text-decoration: none;
+        opacity: 0.1; /* שקוף מאוד עד שעוברים עליו */
+        padding: 20px;
+        transition: opacity 0.3s;
+        z-index: 80;
+    }
+    .nav-arrow:hover { opacity: 1; }
+    .left-arrow { left: 10px; }
+    .right-arrow { right: 10px; }
+
+    /* --- Main Art Container --- */
+    .art-container {
+        width: 100%;
+        max-width: 600px; /* רחב יותר */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        /* דחיפה למטה כדי להתרחק מהכותרת */
+        margin-top: 100px; 
+    }
+
+    /* התמונה הראשית */
+    .main-sketch {
+        max-width: 100%;
+        /* הגדלה משמעותית של התמונה */
+        width: 450px; 
+        height: auto;
+        display: block;
+        margin-bottom: 20px;
+        
+        /* ביטול כל אפקט צל */
+        box-shadow: none !important; 
+        border: none;
+        
+        /* אם הרקע של התמונה לא בדיוק לבן, זה עוזר למזג אותה */
+        mix-blend-mode: multiply; 
+    }
+
+    /* המשפט הקצר */
+    .poetic-sentence {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        margin-top: 15px;
+        text-align: center; /* שיניתי למרכז שייראה טוב עם התמונה הגדולה */
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .spacer { height: 60px; }
+
+    /* הטקסט הארוך */
+    .extended-content {
+        text-align: center;
+        width: 85%;
+        max-width: 500px;
+    }
+
+    .content-header {
+        font-style: italic;
+        font-weight: normal;
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    .content-body {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        font-style: italic;
+        color: #111; /* שחור כמעט מלא */
+        white-space: pre-line;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Astro Soul{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+    
+    </head>
+<body>
+
+    <button class="global-menu-btn" onclick="toggleGlobalSidebar()">
+        <svg width="10" height="10" viewBox="0 0 10 10">
+            <circle cx="5" cy="5" r="4" fill="black"/>
+        </svg>
+    </button>
+
+    <div id="global-sidebar" class="sidebar">
+        <button class="close-menu" onclick="toggleGlobalSidebar()">
+            <svg width="14" height="14" viewBox="0 0 14 14" stroke="black" stroke-width="0.8" fill="none">
+                <line x1="1" y1="1" x2="13" y2="13" />
+                <line x1="13" y1="1" x2="1" y2="13" />
+            </svg>
+        </button>
+
+        <nav class="menu-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            
+            <a href="{{ url_for('database') }}">Database</a>
+            
+            <a href="{{ url_for('research') }}">Research</a>
+        </nav>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <script>
+        function toggleGlobalSidebar() {
+            var menu = document.getElementById("global-sidebar");
+            if (menu.style.left === "0px") {
+                menu.style.left = "-300px"; // סגירה
+            } else {
+                menu.style.left = "0px"; // פתיחה
+            }
+        }
+    </script>
+
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'EB Garamond', serif;
+        }
+
+        /* עיצוב כפתור הנקודה הקבוע */
+        .global-menu-btn {
+            position: fixed; /* תמיד נשאר במקום גם בגלילה */
+            top: 20px; left: 20px;
+            background: transparent; border: none; cursor: pointer;
+            padding: 15px; /* שטח לחיצה נוח */
+            z-index: 9999; /* תמיד מעל הכל */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .global-menu-btn:hover { opacity: 0.5; }
+
+        /* עיצוב התפריט */
+        .sidebar {
+            position: fixed; top: 0; left: -300px;
+            width: 250px; height: 100%;
+            background: #FFFFFF;
+            border-right: 1px solid #eee;
+            z-index: 100000; /* מעל הכפתור ומעל הכל */
+            transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 40px;
+            display: flex; flex-direction: column;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.05);
+        }
+
+        .close-menu {
+            background: none; border: none; cursor: pointer;
+            align-self: flex-start; margin-bottom: 60px; padding: 0;
+            opacity: 0.6;
+        }
+        .close-menu:hover { opacity: 1; }
+
+        .menu-links a {
+            display: block;
+            font-family: 'EB Garamond', serif;
+            font-size: 20px;
+            color: #000; text-decoration: none;
+            margin-bottom: 25px;
+            transition: opacity 0.2s;
+        }
+        .menu-links a:hover { opacity: 0.5; }
+    </style>
+</body>
+</html>

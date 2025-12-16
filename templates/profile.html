@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% set zodiac_svgs = {
+    'Aries': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -16.626 0a7.5 7.5 0 0 0 7.92 -12.446c.13 0 .261 0 .393 0z"/><path d="M12 3v10" /></svg>',
+    'Taurus': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3a6 6 0 0 0 12 0" /><path d="M12 15m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0" /></svg>',
+    'Gemini': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3a21 21 0 0 0 18 0" /><path d="M3 21a21 21 0 0 1 18 0" /><path d="M7 4.5v15" /><path d="M17 4.5v15" /></svg>',
+    'Cancer': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12a6 6 0 0 0 12 0" /><path d="M18 12a6 6 0 0 1 -12 0" /><path d="M6 12a6 6 0 0 1 0 -12" /><path d="M18 12a6 6 0 0 0 0 12" /></svg>',
+    'Leo': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 1 3 3a3 3 0 0 1 -3 -3z" /><path d="M9 12a3 3 0 0 1 3 -3h.5a2.5 2.5 0 0 1 2.5 2.5v1c0 1.5 1.5 3 3.5 3c2.5 0 4.5 -2 4 -4.5c-1 -2.5 -4 -4 -7 -4c-4 0 -6.5 2.5 -6.5 5.5v.5c0 1.5 1.5 3 3.5 3c2.5 0 4.5 -2 4 -4.5c-.5 -2 -2.5 -3 -4.5 -3" /></svg>',
+    'Virgo': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4c-.12 0 -.238 .02 -.354 .058a3 3 0 0 0 -2.646 2.942h0v13" /><path d="M7 4c-.12 0 -.238 .02 -.354 .058a3 3 0 0 0 -2.646 2.942h0v13" /><path d="M16.626 10.5a4.5 4.5 0 1 0 2.192 8.302a2.5 2.5 0 1 1 -2.818 -3.802" /><path d="M14.5 4.5a3.5 3.5 0 0 1 2.126 6" /><path d="M11 14h2.5" /></svg>',
+    'Libra': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a5 5 0 0 0 -5 5h10a5 5 0 0 0 -5 -5z" /><path d="M5 13h14" /><path d="M5 21h14" /></svg>',
+    'Scorpio': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4c-.12 0 -.238 .02 -.354 .058a3 3 0 0 0 -2.646 2.942h0v13" /><path d="M7 4c-.12 0 -.238 .02 -.354 .058a3 3 0 0 0 -2.646 2.942h0v13" /><path d="M14.5 4.5a3.5 3.5 0 0 1 2.126 6" /><path d="M17.332 13.064a4.5 4.5 0 1 0 1.486 7.436a2.5 2.5 0 1 1 -2.818 -3.802" /><path d="M11 14h2.5" /><path d="M22 22l-2 -2" /></svg>',
+    'Sagittarius': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3h9v9" /><path d="M21 3l-9 9l-9 9" /><path d="M5 13l6 -6" /></svg>',
+    'Capricorn': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17a3 3 0 1 0 6 0" /><path d="M4 4a3 3 0 0 1 2.61 4.63a6 6 0 0 1 -1.947 10.637a2.5 2.5 0 1 1 -3.326 -3.534" /><path d="M12.5 8.5a3.5 3.5 0 1 1 2.467 6.11" /><path d="M12.5 8.5v8.5" /></svg>',
+    'Aquarius': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l3 -3l3 3l3 -3l3 3l3 -3l3 3l3 -3l3 3" /><path d="M3 17l3 -3l3 3l3 -3l3 3l3 -3l3 3" /></svg>',
+    'Pisces': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3a9 9 0 1 0 0 18" /><path d="M19 3a9 9 0 1 1 0 18" /><path d="M2 12h20" /></svg>'
+} %}
+
+<a href="{{ back_url }}" class="nav-btn top-left-shifted">
+    <svg width="14" height="14" viewBox="0 0 14 14" stroke="black" stroke-width="0.8" fill="none">
+        <line x1="1" y1="1" x2="13" y2="13" />
+        <line x1="13" y1="1" x2="1" y2="13" />
+    </svg>
+</a>
+
+{% if is_preview %}
+<div class="save-btn-container">
+    <form action="{{ url_for('save_profile_db') }}" method="POST">
+        <input type="hidden" name="name" value="{{ user.name }}">
+        <input type="hidden" name="city" value="{{ user.city }}">
+        <input type="hidden" name="birth_date" value="{{ user.birth_date }}">
+        <input type="hidden" name="birth_time" value="{{ user.birth_time }}">
+        <input type="hidden" name="latitude" value="{{ user.latitude }}">
+        <input type="hidden" name="longitude" value="{{ user.longitude }}">
+        <button type="submit" class="text-btn">save profile</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="profile-header">
+    <div class="avatar-circle">{{ user.name[0] }}</div>
+    <h1>{{ user.name }}</h1>
+    <div class="meta-info">
+        <span>{{ user.city }}</span> • 
+        <span>{{ user.birth_date }}</span> • 
+        <span>{{ user.birth_time }}</span>
+    </div>
+    
+    {% if not is_preview %}
+    <div class="action-links">
+        <a href="{{ url_for('edit_profile', user_id=user.id) }}" class="action-btn">edit</a>
+        <span class="separator">/</span>
+        <a href="#" onclick="openDeleteModal('{{ url_for('delete_profile', user_id=user.id) }}')" class="action-btn delete">delete</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="spectrum-container">
+    {% for body in chart_data %}
+        {% set current_planet = body.planet|lower|replace(' ', '-') %}
+        {% if loop.index < chart_data|length %}
+            {% set next_planet = chart_data[loop.index].planet|lower|replace(' ', '-') %}
+        {% else %}
+            {% set next_planet = current_planet %}
+        {% endif %}
+
+        <div class="spectrum-row" 
+             style="background: linear-gradient(to bottom, var(--col-{{current_planet}}) 60%, var(--col-{{next_planet}}) 100%);"
+             onclick="toggleAccordion('content-{{ loop.index }}')">
+            
+            <div class="row-header">
+                <h2 class="planet-title">{{ body.planet }}</h2>
+                <span id="arrow-{{ loop.index }}" class="expand-arrow">›</span>
+            </div>
+
+            <div id="content-{{ loop.index }}" class="row-content">
+                <div class="content-wrapper">
+                    <div class="hidden-details-header">
+                        <img src="{{ body.image_url }}" alt="{{ body.planet }}" class="detail-icon">
+                        <div class="detail-text">
+                            <a href="#" onclick="openDegreeModal(event, '{{ body.sign }}', {{ body.degree_int }})" class="degree-link">
+                                <span class="detail-degree">{{ body.degree_int }}°</span>
+                                <span class="detail-sign">{{ body.sign }}</span>
+                            </a>
+                            <span class="detail-house">House {{ body.house }}</span>
+                        </div>
+                    </div>
+                    <div class="text-box card-{{ body.sign|lower|replace(' ', '-') }}">
+                        <div class="box-label">{{ body.sign }}</div>
+                        <div class="box-text">{{ body.sign_text | safe }}</div>
+                    </div>
+                    <div class="text-box house-bg-{{ body.house }}th-house">
+                        <div class="box-label">House {{ body.house }}</div>
+                        <div class="box-text">{{ body.house_text | safe }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div id="degree-modal" class="degree-modal-overlay">
+    
+    <button class="nav-btn top-right-dash" onclick="closeDegreeModal()">
+        <img src="{{ url_for('static', filename='images/dash.png') }}" alt="Back">
+    </button>
+
+    <div id="modal-symbol-container" class="top-center-symbol"></div>
+
+    <button class="nav-arrow left-arrow" onclick="navigateDegree('prev')">❮</button>
+    <button class="nav-arrow right-arrow" onclick="navigateDegree('next')">❯</button>
+
+    <div class="art-container" id="modal-content-area">
+        
+        <div class="visual-composition">
+            <img id="modal-main-img" src="" alt="" class="main-sketch">
+        </div>
+
+        <div id="modal-sentence" class="poetic-sentence"></div>
+
+        <div class="spacer"></div>
+
+        <div class="extended-content">
+            <h3 id="modal-header" class="content-header"></h3>
+            <div id="modal-body" class="content-body"></div>
+        </div>
+
+    </div>
+</div>
+
+<div id="delete-modal" class="custom-confirm-overlay">
+    <div class="confirm-box">
+        <p class="confirm-text">Are you sure you want to release this soul?</p>
+        <div class="confirm-actions">
+            <button class="confirm-btn cancel" onclick="closeDeleteModal()">cancel</button>
+            <a id="confirm-delete-link" href="#" class="confirm-btn yes">yes, release</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap');
+
+    :root {
+        --col-sun: #FFF8C9; --col-moon: #F2F2F2; --col-mercury: #E8E8E8; --col-venus: #FFF0F5;
+        --col-mars: #FFE4E1; --col-jupiter: #FFF5E6; --col-saturn: #F0F0F0; --col-uranus: #E0FFFF;
+        --col-neptune: #F0FFFF; --col-pluto: #E6E6FA; --col-ascendant: #FFFFFF; 
+    }
+
+    body, html { background-color: #FFFFFF !important; font-family: 'EB Garamond', serif !important; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
+    header, footer { display: none !important; }
+
+    /* מניעת גלילה של הרקע כשהמודאל פתוח */
+    body.no-scroll { overflow: hidden !important; height: 100vh; }
+
+    /* Basic Elements */
+    /* המיקום תוקן ל-90px כדי לא לחפוף לתפריט */
+    .nav-btn.top-left-shifted { position: absolute; top: 20px; left: 90px; padding: 15px; cursor: pointer; opacity: 0.6; z-index: 100; display: flex; }
+    .save-btn-container { position: absolute; top: 35px; right: 30px; z-index: 100; }
+    .text-btn { background: none; border: none; font-family: 'EB Garamond', serif; font-size: 18px; text-decoration: underline; cursor: pointer; opacity: 0.6; }
+    .profile-header { text-align: center; margin-top: 60px; margin-bottom: 60px; }
+    .avatar-circle { width: 60px; height: 60px; border: 1px solid #000; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: white; z-index: 10; position: relative; }
+    .profile-header h1 { font-weight: 400; font-size: 32px; margin: 0; }
+    .meta-info { font-size: 14px; opacity: 0.6; margin-top: 5px; }
+    .action-links { margin-top: 15px; font-size: 14px; opacity: 0; transition: opacity 0.3s ease; }
+    .profile-header:hover .action-links { opacity: 1; }
+    .action-btn { text-decoration: none; color: #000; font-style: italic; opacity: 0.5; padding: 0 5px; }
+    .action-btn:hover { opacity: 1; }
+    .action-btn.delete:hover { color: #d63031; }
+
+    /* Spectrum List */
+    .spectrum-container { width: 100%; display: flex; flex-direction: column; gap: 0; padding-bottom: 50px; }
+    .spectrum-row { width: 100%; cursor: pointer; position: relative; }
+    .row-header { display: flex; justify-content: center; align-items: center; height: 150px; padding: 0; position: relative; }
+    .planet-title { font-size: 24px; font-weight: 400; text-transform: uppercase; letter-spacing: 3px; margin: 0; opacity: 0.9; line-height: 1; transform: translateY(-15px); }
+    .expand-arrow { position: absolute; right: 40px; font-size: 24px; opacity: 0.4; transition: transform 0.3s ease; transform: translateY(-15px); }
+    .active-row .expand-arrow { transform: translateY(-15px) rotate(90deg); opacity: 0.8; }
+    .row-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+    .content-wrapper { padding: 20px 20px 60px; max-width: 600px; margin: 0 auto; }
+    .hidden-details-header { text-align: center; margin-bottom: 40px; animation: fadeIn 0.5s ease; }
+    .detail-icon { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .detail-text span { display: inline-block; margin: 0 10px; font-size: 18px; font-style: italic; opacity: 0.7; }
+    .degree-link { text-decoration: none; color: inherit; cursor: pointer; border-bottom: 1px dotted rgba(0,0,0,0.3); transition: opacity 0.2s; }
+    .degree-link:hover { opacity: 0.5; border-bottom-color: #000; }
+    .text-box { background: rgba(255,255,255,0.7); padding: 30px; margin-bottom: 25px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); backdrop-filter: blur(5px); }
+    .box-label { font-weight: 600; text-transform: uppercase; font-size: 14px; margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px; display: inline-block; }
+    .box-text { font-size: 17px; line-height: 1.6; white-space: pre-line; }
+    .card-aries, .card-leo, .card-sagittarius { background-color: rgba(255, 228, 225, 0.8); }
+    .card-taurus, .card-virgo, .card-capricorn { background-color: rgba(240, 255, 240, 0.8); }
+    .card-gemini, .card-libra, .card-aquarius { background-color: rgba(230, 230, 250, 0.8); }
+    .card-cancer, .card-scorpio, .card-pisces { background-color: rgba(224, 255, 255, 0.8); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- DEGREE MODAL STYLES --- */
+    .degree-modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #FFFFFF;
+        z-index: 99999; 
+        
+        overflow-y: auto; /* גלילה */
+        overscroll-behavior: contain;
+        padding-bottom: 200px;
+        
+        opacity: 0; visibility: hidden; pointer-events: none;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+        display: flex; flex-direction: column; align-items: center;
+    }
+    .degree-modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+    /* Modal Elements */
+    .nav-btn.top-right-dash { position: fixed; top: 30px; right: 30px; background: transparent; border: none; cursor: pointer; padding: 10px; z-index: 100; opacity: 0.8; transition: opacity 0.3s; }
+    .nav-btn.top-right-dash:hover { opacity: 1; }
+    .nav-btn.top-right-dash img { width: 40px; height: auto; }
+
+    .top-center-symbol { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 90; opacity: 0.8; }
+    .top-center-symbol img { height: 40px; width: auto; }
+
+    .nav-arrow { position: fixed; top: 50%; transform: translateY(-50%); font-size: 3rem; color: #000; background: none; border: none; cursor: pointer; opacity: 0.1; padding: 20px; transition: opacity 0.3s; z-index: 80; }
+    .nav-arrow:hover { opacity: 1; }
+    .left-arrow { left: 10px; }
+    .right-arrow { right: 10px; }
+
+    .art-container { width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; margin-top: 100px; opacity: 0; transition: opacity 0.5s ease; }
+    .degree-modal-overlay.active .art-container { opacity: 1; }
+
+    .main-sketch { max-width: 100%; width: 450px; height: auto; display: block; margin-bottom: 20px; mix-blend-mode: multiply; }
+    
+    .poetic-sentence { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; letter-spacing: 1px; margin-top: 15px; text-align: center; width: 100%; padding: 0 20px; box-sizing: border-box; }
+    .spacer { height: 60px; }
+    .extended-content { text-align: center; width: 85%; max-width: 500px; padding-bottom: 100px; }
+    .content-header { font-style: italic; font-weight: normal; font-size: 1.3rem; margin-bottom: 15px; font-family: 'Times New Roman', Times, serif; }
+    .content-body { font-family: 'Times New Roman', Times, serif; font-size: 1.1rem; line-height: 1.6; font-style: italic; color: #111; white-space: pre-line;}
+
+    /* Delete Modal */
+    .custom-confirm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease; }
+    .custom-confirm-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    .confirm-box { border: 1.5px solid #000; background: #fff; padding: 40px; text-align: center; width: 300px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    .confirm-text { font-size: 18px; margin-bottom: 30px; font-style: italic; }
+    .confirm-actions { display: flex; justify-content: center; gap: 30px; }
+    .confirm-btn { background: none; border: none; font-family: 'EB Garamond', serif; font-size: 18px; cursor: pointer; text-decoration: none; color: #000; transition: opacity 0.2s; }
+    .confirm-btn:hover { opacity: 0.5; }
+    .confirm-btn.yes { font-weight: bold; border-bottom: 1px solid #000; }
+
+</style>
+
+<script>
+    // --- Accordion ---
+    function toggleAccordion(contentId) {
+        const content = document.getElementById(contentId);
+        const arrow = document.getElementById('arrow-' + contentId.split('-')[1]);
+        document.querySelectorAll('.row-content').forEach(el => {
+            if (el !== content && el.classList.contains('is-expanded')) {
+                el.style.maxHeight = null;
+                el.classList.remove('is-expanded');
+                const otherArrow = document.getElementById('arrow-' + el.id.split('-')[1]);
+                if(otherArrow) otherArrow.parentElement.parentElement.classList.remove('active-row');
+            }
+        });
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            content.classList.remove('is-expanded');
+            arrow.parentElement.parentElement.classList.remove('active-row');
+        } else {
+            content.classList.add('is-expanded');
+            content.style.maxHeight = content.scrollHeight + "px";
+            arrow.parentElement.parentElement.classList.add('active-row');
+        }
+    }
+
+    // --- Delete Modal ---
+    function openDeleteModal(deleteUrl) {
+        const modal = document.getElementById('delete-modal');
+        document.getElementById('confirm-delete-link').href = deleteUrl;
+        modal.classList.add('active');
+    }
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').classList.remove('active');
+    }
+
+    // --- DEGREE MODAL LOGIC (עם תיקון גלילה) ---
+    let currentDegreeState = { sign: '', degree: 0, next: null, prev: null };
+
+    function openDegreeModal(event, sign, degree) {
+        event.preventDefault(); 
+        event.stopPropagation();
+        
+        fetchDegreeData(sign, degree);
+        
+        const modal = document.getElementById('degree-modal');
+        modal.classList.add('active');
+        
+        // תיקון: הקפאת גלילה בדף האחורי
+        document.body.classList.add('no-scroll');
+    }
+
+    function closeDegreeModal() {
+        const modal = document.getElementById('degree-modal');
+        modal.classList.remove('active');
+        
+        // תיקון: שחרור הגלילה
+        document.body.classList.remove('no-scroll');
+    }
+
+    function fetchDegreeData(sign, degree) {
+        document.getElementById('modal-main-img').style.opacity = 0.5;
+
+        fetch(`/api/degree_data?sign=${sign}&degree=${degree}`)
+            .then(response => response.json())
+            .then(data => {
+                currentDegreeState = {
+                    sign: data.sign,
+                    degree: data.degree,
+                    next: data.next,
+                    prev: data.prev
+                };
+
+                document.getElementById('modal-main-img').src = data.image_url;
+                document.getElementById('modal-main-img').style.opacity = 1;
+                document.getElementById('modal-sentence').innerText = data.content.sentence || "";
+                document.getElementById('modal-header').innerText = data.content.header || "";
+                document.getElementById('modal-body').innerHTML = data.content.body || ""; 
+
+                const symbolContainer = document.getElementById('modal-symbol-container');
+                if (data.symbol_url) {
+                    symbolContainer.innerHTML = `<img src="${data.symbol_url}" alt="${data.sign}">`;
+                } else {
+                    symbolContainer.innerHTML = '';
+                }
+            })
+            .catch(err => console.error("Error loading degree data:", err));
+    }
+
+    function navigateDegree(direction) {
+        if (direction === 'next' && currentDegreeState.next) {
+            fetchDegreeData(currentDegreeState.next.sign, currentDegreeState.next.degree);
+        } else if (direction === 'prev' && currentDegreeState.prev) {
+            fetchDegreeData(currentDegreeState.prev.sign, currentDegreeState.prev.degree);
+        }
+    }
+</script>
+
+{% endblock %}

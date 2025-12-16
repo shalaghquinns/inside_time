@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="{{ url_for('index') }}" class="nav-btn top-left-shifted">
+    <svg width="14" height="14" viewBox="0 0 14 14" stroke="black" stroke-width="0.8" fill="none">
+        <line x1="1" y1="1" x2="13" y2="13" />
+        <line x1="13" y1="1" x2="1" y2="13" />
+    </svg>
+</a>
+
+{% if next_link %}
+<a href="{{ prev_link }}" class="nav-arrow left-arrow" title="Previous Degree">❮</a>
+<a href="{{ next_link }}" class="nav-arrow right-arrow" title="Next Degree">❯</a>
+{% endif %}
+
+
+<div class="research-container">
+
+    <div class="search-section">
+        <h1 class="page-title">research</h1>
+        
+        <form method="POST" action="{{ url_for('research') }}" class="search-form">
+            
+            <div class="input-group">
+                <select name="sign" required class="minimal-select">
+                    <option value="" disabled {% if not search_sign %}selected{% endif %}>Select Sign</option>
+                    {% for z in zodiac_signs %}
+                    <option value="{{ z }}" {% if search_sign == z %}selected{% endif %}>{{ z }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="number" name="degree" min="1" max="30" placeholder="Deg" 
+                       value="{{ search_degree if search_degree else '' }}" required class="minimal-input">
+            </div>
+
+            <button type="submit" class="search-btn">search</button>
+        </form>
+    </div>
+
+
+    {% if degree_data %}
+    <div class="results-wrapper fade-in">
+        
+        <div class="degree-card-display">
+            <h2 class="result-title">{{ degree_data.degree }} {{ degree_data.sign }}</h2>
+            
+            <img src="{{ degree_data.image_url }}" alt="Art" class="result-image">
+            
+            {% if degree_data.content.sentence %}
+            <div class="poetic-sentence">
+                {{ degree_data.content.sentence }}
+            </div>
+            {% endif %}
+
+            <button onclick="toggleDescription()" class="read-more-btn">read meaning ›</button>
+            
+            <div id="long-desc" class="long-description" style="display: none;">
+                {% if degree_data.content.header %}
+                <h3>{{ degree_data.content.header }}</h3>
+                {% endif %}
+                <p>{{ degree_data.content.body | safe }}</p>
+            </div>
+        </div>
+
+        <div class="spacer-line"></div>
+
+        <div class="souls-section">
+            <h3 class="souls-title">Souls with this frequency</h3>
+            
+            {% if matching_souls %}
+                <div class="souls-grid">
+                    {% for soul in matching_souls %}
+                    <a href="{{ url_for('profile', user_id=soul.id, back_source='research', back_sign=degree_data.sign, back_degree=degree_data.degree) }}" class="soul-card">
+                        <span class="soul-name">{{ soul.name }}</span>
+                        <div class="soul-meta">
+                            <span class="soul-planet">{{ soul.planet }}</span>
+                            <span class="separator">•</span>
+                            <span class="soul-house">House {{ soul.house }}</span>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-results">No souls found with {{ degree_data.degree }} {{ degree_data.sign }} in their chart.</p>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+    /* איפוס */
+    header, footer { display: none !important; }
+    body, html { background-color: #FFFFFF !important; font-family: 'EB Garamond', serif; color: #000; overflow-x: hidden; }
+
+    /* --- התיקון כאן: 90px במקום 30px --- */
+    .nav-btn.top-left-shifted { 
+        position: fixed; 
+        top: 30px; 
+        left: 90px; /* הזזה ימינה כדי לא לעלות על התפריט */
+        padding: 10px; 
+        opacity: 0.6; 
+        z-index: 100; 
+        display: flex; 
+    }
+
+    /* --- Navigation Arrows --- */
+    .nav-arrow {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 3rem;
+        color: #000;
+        text-decoration: none;
+        opacity: 0.1;
+        padding: 20px;
+        transition: opacity 0.3s;
+        z-index: 90;
+    }
+    .nav-arrow:hover { opacity: 1; }
+    .left-arrow { left: 20px; }
+    .right-arrow { right: 20px; }
+
+
+    .research-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 60px 20px;
+        text-align: center;
+        min-height: 100vh;
+    }
+
+    .page-title { font-weight: 400; font-size: 32px; margin-bottom: 40px; letter-spacing: 1px; }
+
+    /* --- Form Styling --- */
+    .search-form { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 60px; }
+    .input-group { display: flex; gap: 20px; align-items: baseline; }
+
+    .minimal-select, .minimal-input {
+        border: none;
+        border-bottom: 1.5px solid #000;
+        background: transparent;
+        font-family: 'EB Garamond', serif;
+        font-size: 22px;
+        color: #000;
+        padding: 5px 10px 8px 10px;
+        outline: none;
+        text-align: center;
+        line-height: normal;
+    }
+    
+    .minimal-select { width: 160px; cursor: pointer; border-radius: 0; -webkit-appearance: none; }
+    .minimal-input { width: 70px; }
+
+    .search-btn {
+        background: transparent; border: 1.5px solid #000;
+        font-family: 'EB Garamond', serif; font-size: 18px;
+        padding: 8px 30px; cursor: pointer; transition: 0.3s;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+    .search-btn:hover { background: #000; color: #fff; }
+
+    /* --- Results Styling --- */
+    .fade-in { animation: fadeIn 0.8s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result-title { font-size: 28px; font-weight: 400; margin-bottom: 20px; }
+    
+    .result-image {
+        width: 300px; height: auto;
+        display: block; margin: 0 auto 20px;
+        mix-blend-mode: multiply;
+        box-shadow: none;
+    }
+
+    .poetic-sentence {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        padding: 0 20px;
+    }
+
+    .read-more-btn {
+        background: none; border: none;
+        font-family: 'EB Garamond', serif;
+        font-style: italic; font-size: 16px;
+        cursor: pointer; opacity: 0.6; margin-bottom: 20px;
+    }
+    .read-more-btn:hover { opacity: 1; }
+
+    .long-description {
+        text-align: left;
+        background: #fafafa;
+        padding: 30px;
+        margin-bottom: 40px;
+        border: 1px solid #eee;
+        white-space: pre-line;
+    }
+    .long-description h3 { font-weight: normal; font-style: italic; margin-top: 0; }
+
+    /* --- Souls List --- */
+    .spacer-line { height: 1px; background: #eee; width: 50%; margin: 40px auto; }
+
+    .souls-title { font-weight: 400; font-size: 20px; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .souls-grid { display: flex; flex-direction: column; gap: 15px; }
+    
+    .soul-card {
+        display: flex; justify-content: space-between; align-items: center;
+        text-decoration: none; color: #000;
+        border: 1px solid #eee; padding: 15px 25px;
+        transition: 0.2s;
+        background: #fff;
+    }
+    .soul-card:hover { border-color: #000; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+    .soul-name { font-size: 20px; font-weight: 500; }
+    .soul-meta { font-style: italic; opacity: 0.7; font-size: 16px; }
+    .separator { margin: 0 5px; opacity: 0.5; }
+
+    .no-results { opacity: 0.5; font-style: italic; }
+
+</style>
+
+<script>
+    function toggleDescription() {
+        var x = document.getElementById("long-desc");
+        var btn = document.querySelector(".read-more-btn");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            btn.innerText = "close meaning ‹";
+        } else {
+            x.style.display = "none";
+            btn.innerText = "read meaning ›";
+        }
+    }
+</script>
+
+{% endblock %}

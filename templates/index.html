@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{# --- נטרול אזורים גלובליים --- #}
+{% block title %}Inside Time{% endblock %}
+{% block header %}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
+
+<div class="minimal-overlay">
+
+    <button class="nav-btn top-left" onclick="toggleSidebar()">
+        <img src="{{ url_for('static', filename='images/dot.png') }}" alt="Menu">
+    </button>
+
+    <button class="nav-btn top-right" onclick="alert('Personal Profile & Settings - Coming Soon')">
+        <img src="{{ url_for('static', filename='images/dash.png') }}" alt="User Settings">
+    </button>
+
+    <div class="center-stage">
+        <h1 class="main-text">
+            inside<br>
+            time
+        </h1>
+        
+        <a href="{{ url_for('add_profile') }}" class="plus-btn">
+            <img src="{{ url_for('static', filename='images/plus.png') }}" alt="Add">
+        </a>
+    </div>
+
+</div>
+
+<style>
+    header, footer, .navbar, .header, .site-header, .main-header { display: none !important; }
+    #overlay { display: none !important; }
+
+    body, html {
+        margin: 0; padding: 0;
+        height: 100%; overflow: hidden;
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        font-family: 'EB Garamond', 'Garamond', serif !important;
+    }
+
+    .minimal-overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #FFFFFF;
+        z-index: 10;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+    }
+
+    /* כפתורים שקופים */
+    .nav-btn, .plus-btn {
+        background: transparent; border: none; cursor: pointer;
+        padding: 0; margin: 0;
+        display: flex; align-items: center; justify-content: center;
+        outline: none !important; text-decoration: none;
+    }
+    .nav-btn:hover, .plus-btn:hover { opacity: 0.6; }
+
+    /* מיקומים */
+    .top-left { position: absolute; top: 30px; left: 30px; }
+    .top-left img { width: 10px; height: auto; }
+
+    .top-right { position: absolute; top: 30px; right: 30px; }
+    .top-right img { width: 15px; height: auto; }
+
+    /* טקסט */
+    .center-stage {
+        text-align: center;
+        display: flex; flex-direction: column; align-items: center;
+        transform: translateY(-20px);
+    }
+
+    .main-text {
+        font-family: 'EB Garamond', serif !important;
+        font-weight: 400;
+        font-size: 36px;
+        line-height: 1.1;
+        color: #000000;
+        margin: 0 0 25px 0;
+        letter-spacing: -0.02em;
+    }
+
+    /* כפתור הפלוס */
+    .plus-btn img { 
+        width: 25px; 
+        height: auto; 
+        transition: transform 0.3s ease;
+    }
+    .plus-btn:hover img { transform: rotate(90deg); }
+
+</style>
+
+{% endblock %}
