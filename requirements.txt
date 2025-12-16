@@ -6,3 +6,4 @@ geopy
 timezonefinder
 pytz
 numpy
+Flask-SQLAlchemy
